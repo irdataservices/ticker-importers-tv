@@ -104,6 +104,16 @@ def get_channel_videos(channel_id):
             published_at = video['snippet']['publishedAt']
             duration = format_duration(video['contentDetails']['duration'])
             
+            # Get thumbnail URLs
+            thumbnails = video['snippet']['thumbnails']
+            thumbnail_urls = {
+                'default': thumbnails.get('default', {}).get('url', ''),
+                'medium': thumbnails.get('medium', {}).get('url', ''),
+                'high': thumbnails.get('high', {}).get('url', ''),
+                'standard': thumbnails.get('standard', {}).get('url', ''),
+                'maxres': thumbnails.get('maxres', {}).get('url', '')
+            }
+            
             # Convert published_at to YYYY-MM-DD format
             date = datetime.fromisoformat(published_at.replace('Z', '+00:00')).strftime('%Y-%m-%d')
             
@@ -120,7 +130,8 @@ def get_channel_videos(channel_id):
                     }
                 ],
                 "duration": duration,
-                "description": description
+                "description": description,
+                "thumbnails": thumbnail_urls
             })
         
         next_page_token = playlist_data.get('nextPageToken')
@@ -164,20 +175,31 @@ def update_channel_json(channel, videos):
                 if not any(link.get('platform') == 'Apple Podcasts' for link in video_links):
                     video_links.append(apple_podcast_link)
                     video['links'] = video_links
-                    updated = True
+            
+            # Check if thumbnails need to be added or updated
+            if 'thumbnails' not in existing_video or existing_video['thumbnails'] != video['thumbnails']:
+                existing_video_ids[video_id] = video
+                updated = True
+            # Check if any other fields need updating
+            elif any(existing_video.get(key) != video.get(key) for key in ['title', 'description', 'duration']):
+                existing_video_ids[video_id] = video
+                updated = True
         else:
             # This is a new video
             existing_videos.append(video)
             updated = True
     
-    # Sort videos by date (newest first)
-    existing_videos.sort(key=lambda x: x.get('date', ''), reverse=True)
-    
-    # Save the updated list if changes were made
+    # Rebuild the list from the updated dictionary
     if updated:
+        existing_videos = list(existing_video_ids.values())
+        
+        # Sort videos by date (newest first)
+        existing_videos.sort(key=lambda x: x.get('date', ''), reverse=True)
+        
+        # Save the updated list
         with open(json_path, 'w') as f:
             json.dump(existing_videos, f, indent=2)
-        print(f"Updated {json_path} with new videos")
+        print(f"Updated {json_path} with new videos or information")
     else:
         print(f"No updates needed for {json_path}")
 
