@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Ticker TV",
+    "youtubeId": "UCwH2oB6U60v_Mo4_6kczhHA",
+    "slug": "ticker-tv"
+  },
+  {
+    "name": "Twin Petes Investing",
+    "youtubeId": "UCw8ikDa5SMQ-W32UIpSKeVQ",
+    "slug": "twin-petes"
+  },
+  {
+    "name": "ShareSoc",
+    "youtubeId": "UCY2Ie8plUSnO0z5PUkG2RNA",
+    "slug": "sharesoc"
+  },
+  {
+    "name": "Progressive Equity Research",
+    "youtubeId": "UCbRK3SyEoH-zqno04Uls9IA",
+    "slug": "progressive-equity"
+  },
+  {
+    "name": "PI World",
+    "youtubeId": "UCCok8QUvANFU4TyJeDns0RQ",
+    "slug": "pi-world"
+  },
+  {
+    "name": "Investor Meet Company",
+    "youtubeId": "UCSkgHz8cLm6TvLND3VsYIRw",
+    "slug": "investor-meet-company"
+  }
+]
