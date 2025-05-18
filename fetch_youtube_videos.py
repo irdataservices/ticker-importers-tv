@@ -97,7 +97,14 @@ def format_duration(duration_str):
 def get_channel_id(username):
     """Get channel ID from username."""
     url = f"https://www.googleapis.com/youtube/v3/channels?part=id&forUsername={username}&key={API_KEY}"
+    print(f"Attempting to get channel ID for \'{username}\' via username/handle URL: {url}") # Retained basic log
     response = requests.get(url)
+    try:
+        response.raise_for_status() # Check for HTTP errors
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP error when fetching channel by username: {e}")
+        print(f"Response content: {response.text}") # Keep response text on error
+        return None
     data = response.json()
     
     if 'items' in data and data['items']:
@@ -105,11 +112,18 @@ def get_channel_id(username):
     
     # If not found by username, try searching by custom URL
     # This is a workaround as the API doesn't directly support @ handles
-    print(f"Channel not found by username: {username}. Trying alternative methods...")
+    print(f"Channel not found by username: {username}. Trying alternative search method...")
     
-    # Try with "c/" prefix (some channels use this format)
     search_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={username}&type=channel&key={API_KEY}"
+    print(f"Attempting to search for channel \'{username}\' via general search URL: {search_url}") # Retained basic log
     search_response = requests.get(search_url)
+    try:
+        search_response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP error when searching for channel: {e}")
+        print(f"Response content: {search_response.text}") # Keep response text on error
+        return None
+        
     search_data = search_response.json()
     
     if 'items' in search_data and search_data['items']:
@@ -126,11 +140,18 @@ def get_channel_videos(channel_id):
     """Fetch videos from a YouTube channel."""
     # Get the uploads playlist ID
     channel_url = f"https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id={channel_id}&key={API_KEY}"
+    print(f"Fetching channel contentDetails from: {channel_url}") # Retained
     response = requests.get(channel_url)
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP error when fetching channel details for {channel_id}: {e}")
+        print(f"Response content: {response.text}") # Keep response text on error
+        return []
     channel_data = response.json()
     
     if 'items' not in channel_data or not channel_data['items']:
-        print(f"No channel found with ID: {channel_id}")
+        print(f"No channel 'items' found or 'items' is empty in contentDetails for ID: {channel_id}")
         return []
     
     uploads_playlist_id = channel_data['items'][0]['contentDetails']['relatedPlaylists']['uploads']
@@ -144,17 +165,40 @@ def get_channel_videos(channel_id):
         if next_page_token:
             playlist_url += f"&pageToken={next_page_token}"
         
+        print(f"Fetching playlist items from: {playlist_url}") # Retained
         response = requests.get(playlist_url)
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print(f"HTTP error when fetching playlist items for playlist {uploads_playlist_id}: {e}")
+            print(f"Response content: {response.text}") # Keep response text on error
+            break 
         playlist_data = response.json()
         
         if 'items' not in playlist_data:
+            print(f"No 'items' in playlist_data for playlist {uploads_playlist_id}. Breaking loop.")
             break
         
-        video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items']]
+        video_ids = [item['snippet']['resourceId']['videoId'] for item in playlist_data['items'] if item.get('snippet') and item['snippet'].get('resourceId')]
         
+        if not video_ids:
+            print(f"No video IDs extracted from playlist items for playlist {uploads_playlist_id}. Breaking loop.")
+            break
+
         # Get detailed video information
         video_details_url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id={','.join(video_ids)}&key={API_KEY}"
+        print(f"Fetching video details from: {video_details_url}") # Retained
         video_details_response = requests.get(video_details_url)
+        try:
+            video_details_response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print(f"HTTP error when fetching video details for video IDs {' ,'.join(video_ids)}: {e}")
+            print(f"Response content: {video_details_response.text}") # Keep response text on error
+            next_page_token = playlist_data.get('nextPageToken')
+            if not next_page_token:
+                break
+            else:
+                continue 
         video_details_data = video_details_response.json()
         
         for video in video_details_data.get('items', []):
@@ -270,6 +314,7 @@ def update_channel_json(channel, videos):
             print("Oldest video date: None")
     else:
         print(f"No existing video file found at {json_path}. Will create a new one.")
+        existing_videos = [] # <--- ADD THIS LINE
         print("Most recent video date: None")
         print("Oldest video date: None")
     
@@ -376,8 +421,17 @@ def main():
     for channel in channels:
         if args.channel and args.channel != channel['slug']:
             continue
-        
+
         print(f"Processing channel: {channel['name']}")
+        
+        # Script now assumes youtubeId is present in the config.
+        # If not, get_channel_videos will likely fail when it tries to use a None or missing ID.
+        # A more robust solution would be to call get_channel_id if youtubeId is missing,
+        # but that's outside the scope of this cleanup.
+        if not channel.get('youtubeId'):
+            print(f"youtubeId missing for {channel['name']}. Skipping channel. Please ensure config has youtubeId.")
+            continue
+
         videos = get_channel_videos(channel['youtubeId'])
         update_channel_json(channel, videos)
 
