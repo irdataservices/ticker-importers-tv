@@ -17,22 +17,82 @@ def load_config(config_path):
     with open(config_path, 'r') as f:
         return json.load(f)
 
+def parse_human_readable_duration_to_seconds(hr_duration_str):
+    """Convert human-readable duration string (e.g., "1h 2m 3s", "45s") to total seconds."""
+    if not hr_duration_str:
+        return 0
+    
+    total_seconds = 0
+    hours = 0
+    minutes = 0
+    seconds = 0
+
+    h_match = re.search(r'(\d+)h', hr_duration_str)
+    if h_match:
+        hours = int(h_match.group(1))
+    
+    m_match = re.search(r'(\d+)m', hr_duration_str)
+    if m_match:
+        minutes = int(m_match.group(1))
+
+    # Ensure 's' is not preceded by 'm' or 'h' if it's part of 'maxres' or similar in other contexts,
+    # though for "Xh Ym Zs" format, it's usually fine.
+    # A simple search for '(\\d+)s' should work for the output of format_duration.
+    s_match = re.search(r'(\d+)s', hr_duration_str)
+    if s_match:
+        # Check if the 's' found is part of a 'Xs' unit and not, for example, 'maxres'
+        # This check is a bit naive; assumes 's' with digits before it is seconds.
+        # Given format_duration, this should be safe.
+        full_match_str = s_match.group(0)
+        if hr_duration_str.endswith(full_match_str) or " " + full_match_str in hr_duration_str :
+             seconds = int(s_match.group(1))
+        
+    total_seconds = (hours * 3600) + (minutes * 60) + seconds
+    return total_seconds
+
+def parse_duration_to_seconds(duration_str):
+    """Convert YouTube API duration format (ISO 8601 PT...S) to total seconds."""
+    if not duration_str or not duration_str.startswith('PT'):
+        return 0
+
+    match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration_str)
+    if not match:
+        return 0
+
+    hours, minutes, seconds = match.groups()
+
+    total_seconds = 0
+    if hours:
+        total_seconds += int(hours) * 3600
+    if minutes:
+        total_seconds += int(minutes) * 60
+    if seconds:
+        total_seconds += int(seconds)
+        
+    return total_seconds
+
 def format_duration(duration_str):
     """Convert YouTube API duration format to human-readable format."""
-    # YouTube duration format is like PT1H30M15S
-    hours = re.search(r'(\d+)H', duration_str)
-    minutes = re.search(r'(\d+)M', duration_str)
-    seconds = re.search(r'(\d+)S', duration_str)
+    match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration_str)
+    if not match:
+        if duration_str == "PT": return "0s" # Handle empty PT case
+        return "" # Or handle other invalid formats as needed
+
+    hours, minutes, seconds = match.groups()
     
-    duration_parts = []
+    parts = []
     if hours:
-        duration_parts.append(f"{hours.group(1)}h")
+        parts.append(f"{hours}h")
     if minutes:
-        duration_parts.append(f"{minutes.group(1)}m")
-    if seconds and not (hours or minutes):
-        duration_parts.append(f"{seconds.group(1)}s")
+        parts.append(f"{minutes}m")
+    if seconds: # Append seconds if present, even if 0 and other parts exist (e.g. PT1M0S -> 1m 0s)
+        parts.append(f"{seconds}s")
     
-    return " ".join(duration_parts)
+    if not parts:
+        if duration_str == "PT0S": return "0s"
+        return "0s" # Default for unexpected empty like just "PT"
+        
+    return " ".join(parts)
 
 def get_channel_id(username):
     """Get channel ID from username."""
@@ -102,7 +162,17 @@ def get_channel_videos(channel_id):
             title = video['snippet']['title']
             description = video['snippet']['description']
             published_at = video['snippet']['publishedAt']
-            duration = format_duration(video['contentDetails']['duration'])
+            
+            duration_iso = video['contentDetails']['duration']
+            duration_seconds_val = parse_duration_to_seconds(duration_iso)
+            
+            # Filter videos shorter than 2 minutes (120 seconds)
+            if duration_seconds_val < 120:
+                human_readable_duration = format_duration(duration_iso)
+                print(f"Skipping short video {video_id} ({human_readable_duration if human_readable_duration else 'N/A'}): {title}")
+                continue
+
+            duration = format_duration(duration_iso)
             
             # Get thumbnail URLs
             thumbnails = video['snippet']['thumbnails']
@@ -116,6 +186,7 @@ def get_channel_videos(channel_id):
             
             # Convert published_at to YYYY-MM-DD format
             date = datetime.fromisoformat(published_at.replace('Z', '+00:00')).strftime('%Y-%m-%d')
+            print(f"Processing video {video_id} with date {date}")
             
             videos.append({
                 "id": video_id,
@@ -130,6 +201,7 @@ def get_channel_videos(channel_id):
                     }
                 ],
                 "duration": duration,
+                "duration_iso": duration_iso,
                 "description": description,
                 "thumbnails": thumbnail_urls
             })
@@ -146,21 +218,69 @@ def update_channel_json(channel, videos):
     os.makedirs('data', exist_ok=True)
     
     json_path = f"data/{channel['slug']}.json"
-    existing_videos = []
+    existing_videos_from_file = []
+    
+    print("\n==================================================")
+    print(f"Processing {channel['name']}:")
+    print(f"Found {len(videos)} videos from YouTube API (after filtering shorts)")
     
     # Load existing videos if the file exists
     if os.path.exists(json_path):
         try:
             with open(json_path, 'r') as f:
-                existing_videos = json.load(f)
+                existing_videos_from_file = json.load(f)
+            
+            videos_to_keep = []
+            removed_short_video_ids = []
+            print(f"Checking {len(existing_videos_from_file)} existing videos in {json_path} for shorts...")
+
+            for idx, ex_video in enumerate(existing_videos_from_file):
+                is_short = False
+                video_id_for_log = ex_video.get('id', f"entry_{idx}")
+                duration_iso_str = ex_video.get('duration_iso')
+                
+                if duration_iso_str:
+                    seconds = parse_duration_to_seconds(duration_iso_str)
+                    if 0 < seconds < 120:
+                        is_short = True
+                elif 'duration' in ex_video: # Legacy entry, try parsing human-readable duration
+                    seconds = parse_human_readable_duration_to_seconds(ex_video['duration'])
+                    if 0 < seconds < 120:
+                        is_short = True
+                
+                if is_short:
+                    removed_short_video_ids.append(video_id_for_log)
+                else:
+                    videos_to_keep.append(ex_video)
+            
+            if removed_short_video_ids:
+                print(f"Removed {len(removed_short_video_ids)} existing short videos: {', '.join(removed_short_video_ids)}")
+            
+            existing_videos = videos_to_keep # This list is now filtered
+
+            print(f"Found {len(existing_videos)} existing videos in {json_path} (after filtering shorts)")
+            if existing_videos:
+                existing_videos.sort(key=lambda x: x.get('date', ''), reverse=True)
+                print(f"Most recent video date: {existing_videos[0]['date']}")
+                print(f"Oldest video date: {existing_videos[-1]['date']}")
         except json.JSONDecodeError:
-            print(f"Error reading {json_path}, creating new file")
+            print(f"Error reading {json_path}, will create new file.")
+            existing_videos = [] # Ensure it's an empty list
+            print("Most recent video date: None")
+            print("Oldest video date: None")
+    else:
+        print(f"No existing video file found at {json_path}. Will create a new one.")
+        print("Most recent video date: None")
+        print("Oldest video date: None")
     
     # Create a dictionary of existing videos by ID for quick lookup
     existing_video_ids = {video.get('id'): video for video in existing_videos}
     
     # Update existing videos and add new ones
     updated = False
+    new_videos = []
+    updated_videos = []
+    
     for video in videos:
         video_id = video.get('id')
         if video_id in existing_video_ids:
@@ -178,30 +298,68 @@ def update_channel_json(channel, videos):
             
             # Check if thumbnails need to be added or updated
             if 'thumbnails' not in existing_video or existing_video['thumbnails'] != video['thumbnails']:
+                print(f"Updating thumbnails for video {video_id}")
                 existing_video_ids[video_id] = video
                 updated = True
+                updated_videos.append(video_id)
             # Check if any other fields need updating
             elif any(existing_video.get(key) != video.get(key) for key in ['title', 'description', 'duration']):
+                print(f"Updating fields for video {video_id}")
                 existing_video_ids[video_id] = video
                 updated = True
+                updated_videos.append(video_id)
         else:
             # This is a new video
+            print(f"Adding new video {video_id}")
+            print(f"Title: {video.get('title')}")
+            print(f"Date: {video.get('date')}")
             existing_videos.append(video)
             updated = True
+            new_videos.append(video_id)
     
-    # Rebuild the list from the updated dictionary
+    if new_videos:
+        print(f"\nFound {len(new_videos)} new videos:")
+        for vid_id in new_videos:
+            print(f"- {vid_id}")
+        print() # Add a blank line for spacing
+
+    if updated_videos:
+        print(f"\nUpdated details for {len(updated_videos)} existing videos: {', '.join(updated_videos)}")
+        print()
+    
+    # Rebuild the list from the updated dictionary if new videos were added or existing ones updated
     if updated:
-        existing_videos = list(existing_video_ids.values())
+        # Consolidate new videos with potentially updated existing ones
+        # New videos were appended to existing_videos list directly if they were truly new.
+        # Updated videos replaced entries in existing_video_ids.
         
+        # Rebuild the list correctly to include new and updated videos
+        current_video_list = []
+        processed_ids_for_rebuild = set()
+
+        # Add all videos from the updated existing_video_ids dictionary
+        for vid_id, video_data in existing_video_ids.items():
+            current_video_list.append(video_data)
+            processed_ids_for_rebuild.add(vid_id)
+
+        # Add any genuinely new videos that were appended to existing_videos list
+        # but not part of the original existing_video_ids keys
+        for video_data in existing_videos:
+            if video_data.get('id') not in processed_ids_for_rebuild:
+                current_video_list.append(video_data)
+                processed_ids_for_rebuild.add(video_data.get('id'))
+
         # Sort videos by date (newest first)
-        existing_videos.sort(key=lambda x: x.get('date', ''), reverse=True)
+        current_video_list.sort(key=lambda x: x.get('date', ''), reverse=True)
         
         # Save the updated list
         with open(json_path, 'w') as f:
-            json.dump(existing_videos, f, indent=2)
+            json.dump(current_video_list, f, indent=2)
         print(f"Updated {json_path} with new videos or information")
+        print(f"Total videos after update: {len(current_video_list)}")
     else:
         print(f"No updates needed for {json_path}")
+    print("==================================================")
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch YouTube videos and save to JSON')
