@@ -407,6 +407,50 @@ def update_channel_json(channel, videos):
     print("==================================================")
 
 def main():
+    # --- BEGIN ADDED CODE for channel-list.json ---
+    data_dir = "data"
+    channel_list_filename = "channel-list.json"
+    channel_list_path = os.path.join(data_dir, channel_list_filename)
+    known_config_file = "channels-config.json" # The primary config file this script uses
+
+    # Ensure data directory exists
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+        print(f"Created directory: {data_dir}")
+
+    current_files_in_list = []
+    try:
+        if os.path.exists(channel_list_path):
+            with open(channel_list_path, 'r') as f:
+                content = f.read()
+                if content.strip(): # Check if file is not empty
+                    current_files_in_list = json.loads(content)
+                if not isinstance(current_files_in_list, list):
+                    print(f"Warning: {channel_list_path} does not contain a valid JSON list. It will be overwritten.")
+                    current_files_in_list = []
+        else:
+            print(f"{channel_list_path} not found, will be created.")
+    except json.JSONDecodeError:
+        print(f"Warning: Could not decode JSON from {channel_list_path}. It will be overwritten.")
+        current_files_in_list = []
+    except Exception as e:
+        print(f"An error occurred while reading {channel_list_path}: {e}. It will be treated as empty/overwritten.")
+        current_files_in_list = []
+
+    # Ensure the known_config_file is in the list
+    if known_config_file not in current_files_in_list:
+        current_files_in_list.append(known_config_file)
+        # Optionally, sort or remove duplicates if necessary, for now just append
+        # To keep it simple, we assume this is the only file actively managed this way by this script for now.
+    
+    try:
+        with open(channel_list_path, 'w') as f:
+            json.dump(current_files_in_list, f, indent=2)
+        print(f"Updated {channel_list_path} to ensure '{known_config_file}' is listed.")
+    except Exception as e:
+        print(f"Error writing to {channel_list_path}: {e}")
+    # --- END ADDED CODE ---
+
     parser = argparse.ArgumentParser(description='Fetch YouTube videos and save to JSON')
     parser.add_argument('--config', default='channels-config.json', help='Path to channel configuration file')
     parser.add_argument('--channel', help='Process only this channel slug')
