@@ -69,6 +69,29 @@
     }
   },
   {
+    "id": "uE2tDquwz2s",
+    "title": "ESSENTRA PLC - Annual General Meeting",
+    "date": "2025-05-21",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=uE2tDquwz2s",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "13m 5s",
+    "duration_iso": "PT13M5S",
+    "description": "To be informed of all ESSENTRA PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/essentra-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/uE2tDquwz2s/default.jpg",
+      "medium": "https://i.ytimg.com/vi/uE2tDquwz2s/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/uE2tDquwz2s/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/uE2tDquwz2s/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/uE2tDquwz2s/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "vvRZVhw2pY0",
     "title": "NEXUS INFRASTRUCTURE PLC - Interim Results",
     "date": "2025-05-20",
