@@ -184,6 +184,29 @@
     }
   },
   {
+    "id": "4Y_crvEZPRg",
+    "title": "PANTHEON RESOURCES PLC - Investor Update",
+    "date": "2025-05-21",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=4Y_crvEZPRg",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "53m 20s",
+    "duration_iso": "PT53M20S",
+    "description": "To be informed of all PANTHEON RESOURCES PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/pantheon-resources-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/4Y_crvEZPRg/default.jpg",
+      "medium": "https://i.ytimg.com/vi/4Y_crvEZPRg/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/4Y_crvEZPRg/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/4Y_crvEZPRg/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/4Y_crvEZPRg/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "vvRZVhw2pY0",
     "title": "NEXUS INFRASTRUCTURE PLC - Interim Results",
     "date": "2025-05-20",
