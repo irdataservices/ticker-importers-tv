@@ -46,6 +46,29 @@
     }
   },
   {
+    "id": "3AoxLywhZyw",
+    "title": "CAPITAL LIMITED - Annual General Meeting",
+    "date": "2025-05-21",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=3AoxLywhZyw",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "19m 4s",
+    "duration_iso": "PT19M4S",
+    "description": "To be informed of all CAPITAL LIMITED's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/capital-limited/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/3AoxLywhZyw/default.jpg",
+      "medium": "https://i.ytimg.com/vi/3AoxLywhZyw/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/3AoxLywhZyw/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/3AoxLywhZyw/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/3AoxLywhZyw/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "vvRZVhw2pY0",
     "title": "NEXUS INFRASTRUCTURE PLC - Interim Results",
     "date": "2025-05-20",
