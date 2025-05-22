@@ -18,7 +18,7 @@
       "default": "https://i.ytimg.com/vi/SAi4OA1FlUI/default.jpg",
       "medium": "https://i.ytimg.com/vi/SAi4OA1FlUI/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/SAi4OA1FlUI/hqdefault.jpg",
-      "standard": "",
+      "standard": "https://i.ytimg.com/vi/SAi4OA1FlUI/sddefault.jpg",
       "maxres": ""
     }
   },
@@ -36,13 +36,36 @@
     ],
     "duration": "23m 39s",
     "duration_iso": "PT23M39S",
-    "description": "To be informed of all EAST STAR RESOURCES PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/east-star-resources-plc/register-investor",
+    "description": "To be informed of all EAST STAR RESOURCES PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/east-star-resources-plc/register-investor\n\n0:00 Introduction\n1:05 Business Overview\n13:39 Q&A",
     "thumbnails": {
       "default": "https://i.ytimg.com/vi/FANCAtumHp4/default.jpg",
       "medium": "https://i.ytimg.com/vi/FANCAtumHp4/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/FANCAtumHp4/hqdefault.jpg",
       "standard": "https://i.ytimg.com/vi/FANCAtumHp4/sddefault.jpg",
-      "maxres": "https://i.ytimg.com/vi/FANCAtumHp4/maxresdefault.jpg"
+      "maxres": ""
+    }
+  },
+  {
+    "id": "MjZ8qVahRds",
+    "title": "ILIKA PLC - Investor Update",
+    "date": "2025-05-22",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=MjZ8qVahRds",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "44m 5s",
+    "duration_iso": "PT44M5S",
+    "description": "To be informed of all ILIKA PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/ilika-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/MjZ8qVahRds/default.jpg",
+      "medium": "https://i.ytimg.com/vi/MjZ8qVahRds/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/MjZ8qVahRds/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/MjZ8qVahRds/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/MjZ8qVahRds/maxresdefault.jpg"
     }
   },
   {
@@ -249,7 +272,7 @@
       "medium": "https://i.ytimg.com/vi/4Y_crvEZPRg/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/4Y_crvEZPRg/hqdefault.jpg",
       "standard": "https://i.ytimg.com/vi/4Y_crvEZPRg/sddefault.jpg",
-      "maxres": "https://i.ytimg.com/vi/4Y_crvEZPRg/maxresdefault.jpg"
+      "maxres": ""
     }
   },
   {
