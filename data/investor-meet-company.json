@@ -1,5 +1,51 @@
 [
   {
+    "id": "SAi4OA1FlUI",
+    "title": "THARISA PLC - Interim Results",
+    "date": "2025-05-22",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=SAi4OA1FlUI",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "1h 13m 35s",
+    "duration_iso": "PT1H13M35S",
+    "description": "To be informed of all THARISA PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/tharisa-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/SAi4OA1FlUI/default.jpg",
+      "medium": "https://i.ytimg.com/vi/SAi4OA1FlUI/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/SAi4OA1FlUI/hqdefault.jpg",
+      "standard": "",
+      "maxres": ""
+    }
+  },
+  {
+    "id": "FANCAtumHp4",
+    "title": "EAST STAR RESOURCES PLC - Investor Presentation",
+    "date": "2025-05-22",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=FANCAtumHp4",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "23m 39s",
+    "duration_iso": "PT23M39S",
+    "description": "To be informed of all EAST STAR RESOURCES PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/east-star-resources-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/FANCAtumHp4/default.jpg",
+      "medium": "https://i.ytimg.com/vi/FANCAtumHp4/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/FANCAtumHp4/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/FANCAtumHp4/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/FANCAtumHp4/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "8D_IB4RGxXA",
     "title": "CAMELLIA PLC - Company Presentation",
     "date": "2025-05-21",
