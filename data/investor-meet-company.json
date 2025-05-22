@@ -13,7 +13,7 @@
     ],
     "duration": "1h 13m 35s",
     "duration_iso": "PT1H13M35S",
-    "description": "To be informed of all THARISA PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/tharisa-plc/register-investor",
+    "description": "To be informed of all THARISA PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/tharisa-plc/register-investor\n\n0:00 Introduction\n1:33 Overview\n12:25 Financial highlights\n26:14 Strategy\n34:39 Karo Project\n50:21 Summary\n51:26 Q&A",
     "thumbnails": {
       "default": "https://i.ytimg.com/vi/SAi4OA1FlUI/default.jpg",
       "medium": "https://i.ytimg.com/vi/SAi4OA1FlUI/mqdefault.jpg",
@@ -135,6 +135,29 @@
       "high": "https://i.ytimg.com/vi/NaWhPCVhtdw/hqdefault.jpg",
       "standard": "https://i.ytimg.com/vi/NaWhPCVhtdw/sddefault.jpg",
       "maxres": "https://i.ytimg.com/vi/NaWhPCVhtdw/maxresdefault.jpg"
+    }
+  },
+  {
+    "id": "AehiZJxOEn4",
+    "title": "PICTON PROPERTY INCOME LTD - Preliminary Results",
+    "date": "2025-05-22",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=AehiZJxOEn4",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "44m 32s",
+    "duration_iso": "PT44M32S",
+    "description": "To be informed of all PICTON PROPERTY INCOME LTD's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/picton-property-income-ltd/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/AehiZJxOEn4/default.jpg",
+      "medium": "https://i.ytimg.com/vi/AehiZJxOEn4/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/AehiZJxOEn4/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/AehiZJxOEn4/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/AehiZJxOEn4/maxresdefault.jpg"
     }
   },
   {
