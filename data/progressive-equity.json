@@ -18,8 +18,8 @@
       "default": "https://i.ytimg.com/vi/LeiaWcJgTgE/default.jpg",
       "medium": "https://i.ytimg.com/vi/LeiaWcJgTgE/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/LeiaWcJgTgE/hqdefault.jpg",
-      "standard": "",
-      "maxres": ""
+      "standard": "https://i.ytimg.com/vi/LeiaWcJgTgE/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/LeiaWcJgTgE/maxresdefault.jpg"
     }
   },
   {
