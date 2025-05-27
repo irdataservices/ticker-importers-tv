@@ -1,5 +1,51 @@
 [
   {
+    "id": "QMuOl_jJgK4",
+    "title": "Talking Tech - Episode 21",
+    "date": "2025-05-27",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=QMuOl_jJgK4",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "13m 4s",
+    "duration_iso": "PT13M4S",
+    "description": "Progressive's George O'Connor and Ian Robertson consider Sage\u2019s results and the return of the normal share price path following results. George points to Xero as Sage\u2019s rain cloud whilst Ian points to the success of Sage\u2019s Intacct offering.\n \nGamma\u2019s AGM statement contained comments in the UK market that led to a share price fall, although the progress in Germany is something that the market should not ignore.\n \nTech and defence is discussed \u2013 George and Ian reflect on the spoof potential, surely not!",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/QMuOl_jJgK4/default.jpg",
+      "medium": "https://i.ytimg.com/vi/QMuOl_jJgK4/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/QMuOl_jJgK4/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/QMuOl_jJgK4/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/QMuOl_jJgK4/maxresdefault.jpg"
+    }
+  },
+  {
+    "id": "mjl9BKTtH3Y",
+    "title": "The Market Call - Week Ending 23rd May 2025",
+    "date": "2025-05-27",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=mjl9BKTtH3Y",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "14m 52s",
+    "duration_iso": "PT14M52S",
+    "description": "This week, Progressive's Gareth Evans and Jeremy McKeown discuss Moody's downgrade of US debt, Donald's Big Beautiful Bill (yes, that is what it is called), and the bond vigilantes' work at the long end of the yield curve. Jeremy discusses Japan's special place in all this and wonders how the world's monetary authorities can put the long-term inflation genie back in the bottle.\n\nIn the UK, inflation and government borrowing were higher than expected, making it a bad week for Rachel Reeves. But at least we have rejoined the EU (well, agreed to agree with them about a few things).\n\nDespite all this, the UK market remained in a decent mood with small and mid-cap stocks outperforming large-cap stocks.\n\nGareth discusses updates and results from Forterra, IDOX and SDI Group.   \n\nNext week, some US Q1 GDP data is widely expected to show a sharp decline in activity.\n\nHowever, investors' main focus is likely to remain on the long end of the bond market and how to avoid the impact of FX and bond volatility.",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/mjl9BKTtH3Y/default.jpg",
+      "medium": "https://i.ytimg.com/vi/mjl9BKTtH3Y/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/mjl9BKTtH3Y/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/mjl9BKTtH3Y/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/mjl9BKTtH3Y/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "axyRVZ5ae7M",
     "title": "The Market Call  - week ending 16th May 2025",
     "date": "2025-05-18",
