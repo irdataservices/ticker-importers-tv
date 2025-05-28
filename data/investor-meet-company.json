@@ -18,8 +18,31 @@
       "default": "https://i.ytimg.com/vi/KiEATVES4rI/default.jpg",
       "medium": "https://i.ytimg.com/vi/KiEATVES4rI/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/KiEATVES4rI/hqdefault.jpg",
-      "standard": "https://i.ytimg.com/vi/KiEATVES4rI/sddefault.jpg",
-      "maxres": "https://i.ytimg.com/vi/KiEATVES4rI/maxresdefault.jpg"
+      "standard": "",
+      "maxres": ""
+    }
+  },
+  {
+    "id": "8UtFTIk0X0A",
+    "title": "INSPIRATION HEALTHCARE GROUP PLC - Full year results briefing",
+    "date": "2025-05-28",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=8UtFTIk0X0A",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "40m 49s",
+    "duration_iso": "PT40M49S",
+    "description": "To be informed of all INSPIRATION HEALTHCARE GROUP PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/inspiration-healthcare-group-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/8UtFTIk0X0A/default.jpg",
+      "medium": "https://i.ytimg.com/vi/8UtFTIk0X0A/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/8UtFTIk0X0A/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/8UtFTIk0X0A/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/8UtFTIk0X0A/maxresdefault.jpg"
     }
   },
   {
