@@ -18,8 +18,8 @@
       "default": "https://i.ytimg.com/vi/KiEATVES4rI/default.jpg",
       "medium": "https://i.ytimg.com/vi/KiEATVES4rI/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/KiEATVES4rI/hqdefault.jpg",
-      "standard": "",
-      "maxres": ""
+      "standard": "https://i.ytimg.com/vi/KiEATVES4rI/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/KiEATVES4rI/maxresdefault.jpg"
     }
   },
   {
@@ -36,7 +36,7 @@
     ],
     "duration": "40m 49s",
     "duration_iso": "PT40M49S",
-    "description": "To be informed of all INSPIRATION HEALTHCARE GROUP PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/inspiration-healthcare-group-plc/register-investor",
+    "description": "To be informed of all INSPIRATION HEALTHCARE GROUP PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/inspiration-healthcare-group-plc/register-investor\n\n0:00 Introduction\n1:51 Highlights\n7:53 Financials\n29:01 Q&A",
     "thumbnails": {
       "default": "https://i.ytimg.com/vi/8UtFTIk0X0A/default.jpg",
       "medium": "https://i.ytimg.com/vi/8UtFTIk0X0A/mqdefault.jpg",
