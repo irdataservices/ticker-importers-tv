@@ -1,5 +1,28 @@
 [
   {
+    "id": "KiEATVES4rI",
+    "title": "EVOKE PLC - Annual General Meeting",
+    "date": "2025-05-28",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=KiEATVES4rI",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "8m 40s",
+    "duration_iso": "PT8M40S",
+    "description": "To be informed of all EVOKE PLC's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/evoke-plc/register-investor",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/KiEATVES4rI/default.jpg",
+      "medium": "https://i.ytimg.com/vi/KiEATVES4rI/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/KiEATVES4rI/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/KiEATVES4rI/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/KiEATVES4rI/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "g-zT1Plh5FE",
     "title": "SEASCAPE ENERGY ASIA PLC - Full Year Results for the 12 months ended 31 December 2024",
     "date": "2025-05-27",
