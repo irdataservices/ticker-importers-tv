@@ -46,6 +46,29 @@
     }
   },
   {
+    "id": "nyEScbrX0Ck",
+    "title": "Talking Tech - Episode 22",
+    "date": "2025-06-02",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=nyEScbrX0Ck",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "22m 3s",
+    "duration_iso": "PT22M3S",
+    "description": "Progressive's George O'Connor and Ian Robertson catch up on events in and around the UK small and mid-cap listed tech.\n\nLooking to the US, Salesforce and C3.ai results show positive momentum for AI, as of course do Nvidia\u2019s. But investors are asking more questions and AI vs. Economic Downturn is a match that\u2019s difficult to call.\n \nIan is more immediately concerned about the impact of US government actions to curtail sales into China by Cadence, Synopsis and Siemens EDA \u2013 companies which, like ASML and TSMC, you really need to understand to truly get tech.\n \nGeorge and Ian ponder the Pensions Investment Review. Only serious AIM/small-cap Kool-Aid imbibers would have hoped for much, so AIM/Aquis ranking on a par with a theme park near Bedford is perhaps a result.\n \nDirecting money to infrastructure/tech direct impact is an easier sell to the party/public than bailing out UK public equities.\n \nConsider those who look upon it from the outside. This is a government that is trying to do something to stimulate growth. Something that could, or even should, be seen as a positive development.\n \nTo outsiders the failings of UK public equities and small-cap / AIM in particular are all too evident and have been for quite some time. It\u2019s widely recognised as a market and regulatory structure that does not work as it should for investors or companies.  Perhaps that needs changing to get Rachel Reeves onside.\n \nGrabbing the segue across to a market that has seen success on AIM, George highlights recent gaming sector newsflow and the potential for patient investors to gain from its returning health.",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/nyEScbrX0Ck/default.jpg",
+      "medium": "https://i.ytimg.com/vi/nyEScbrX0Ck/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/nyEScbrX0Ck/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/nyEScbrX0Ck/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/nyEScbrX0Ck/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "kxbLtC-N_Zg",
     "title": "The Market Call - Week Ending 30th May 2025",
     "date": "2025-05-30",

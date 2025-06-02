@@ -1,5 +1,28 @@
 [
   {
+    "id": "pXG4duoCd4I",
+    "title": "Talking Tech - Episode 22",
+    "date": "2025-06-02",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=pXG4duoCd4I",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "22m 3s",
+    "duration_iso": "PT22M3S",
+    "description": "George ( https://progressive-research.com/people/george-oconnor/ ) and Ian ( https://progressive-research.com/people/ian-robertson/ ) catch up on events in and around the UK small and mid-cap listed tech.\n\nLooking to the US, Salesforce and C3.ai results show positive momentum for AI, as of course do Nvidia\u2019s. But investors are asking more questions and AI vs. Economic Downturn is a match that\u2019s difficult to call. Ian is more immediately concerned about the impact of US government actions to curtail sales into China by Cadence, Synopsis and Siemens EDA \u2013 companies which, like ASML and TSMC, you really need to understand to truly get tech. George and Ian ponder the Pensions Investment Review. Only serious AIM/small-cap Kool-Aid imbibers would have hoped for much, so AIM/Aquis ranking on a par with a theme park near Bedford is perhaps a result. Directing money to infrastructure/tech direct impact is an easier sell to the party/public than bailing out UK public equities. Consider those who look upon it from the outside. This is a government that is trying to do something to stimulate growth. Something that could, or even should, be seen as a positive development. To outsiders the failings of UK public equities and small-cap / AIM in particular are all too evident and have been for quite some time. It\u2019s widely recognised as a market and regulatory structure that does not work as it should for investors or companies. Perhaps that needs changing to get Rachel Reeves onside. Grabbing the segue across to a market that has seen success on AIM, George highlights recent gaming sector newsflow and the potential for patient investors to gain from its returning health.\n\nTalking Tech\nEpisode 22\nJune 2, 2025\n\n\u2605 Episode details: https://share.transistor.fm/s/29112bec",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/pXG4duoCd4I/default.jpg",
+      "medium": "https://i.ytimg.com/vi/pXG4duoCd4I/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/pXG4duoCd4I/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/pXG4duoCd4I/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/pXG4duoCd4I/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "L2XamCOeLEY",
     "title": "Energy, Populism & War with Doomberg",
     "date": "2025-06-01",
