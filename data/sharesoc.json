@@ -1,5 +1,28 @@
 [
   {
+    "id": "O1U9Q_QDG1Q",
+    "title": "Meet the Analyst- ''gold to gold miners'' webinar with Edison Group",
+    "date": "2025-06-03",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=O1U9Q_QDG1Q",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "56m 25s",
+    "duration_iso": "PT56M25S",
+    "description": "",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/O1U9Q_QDG1Q/default.jpg",
+      "medium": "https://i.ytimg.com/vi/O1U9Q_QDG1Q/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/O1U9Q_QDG1Q/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/O1U9Q_QDG1Q/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/O1U9Q_QDG1Q/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "wA9Mvw8D1MM",
     "title": "Asset Match Limited - ShareSoc Seminar",
     "date": "2025-05-14",
