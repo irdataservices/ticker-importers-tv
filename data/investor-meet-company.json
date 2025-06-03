@@ -87,8 +87,8 @@
       "default": "https://i.ytimg.com/vi/zCwyWsferis/default.jpg",
       "medium": "https://i.ytimg.com/vi/zCwyWsferis/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/zCwyWsferis/hqdefault.jpg",
-      "standard": "",
-      "maxres": ""
+      "standard": "https://i.ytimg.com/vi/zCwyWsferis/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/zCwyWsferis/maxresdefault.jpg"
     }
   },
   {
