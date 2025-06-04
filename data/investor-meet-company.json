@@ -1,5 +1,28 @@
 [
   {
+    "id": "PBlSyRtaVGs",
+    "title": "LEXINGTON GOLD LTD - Investor Presentation",
+    "date": "2025-06-04",
+    "contentType": "podcast",
+    "links": [
+      {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=PBlSyRtaVGs",
+        "platform": "YouTube"
+      }
+    ],
+    "duration": "48m 15s",
+    "duration_iso": "PT48M15S",
+    "description": "To be informed of all LEXINGTON GOLD LTD's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/lexington-gold-ltd/register-investor\n\n0:00 Introduction\n3:54 Business Overview\n30:05 Q&A",
+    "thumbnails": {
+      "default": "https://i.ytimg.com/vi/PBlSyRtaVGs/default.jpg",
+      "medium": "https://i.ytimg.com/vi/PBlSyRtaVGs/mqdefault.jpg",
+      "high": "https://i.ytimg.com/vi/PBlSyRtaVGs/hqdefault.jpg",
+      "standard": "https://i.ytimg.com/vi/PBlSyRtaVGs/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/PBlSyRtaVGs/maxresdefault.jpg"
+    }
+  },
+  {
     "id": "p5WSDqsnPsg",
     "title": "REFUELS N.V - Q4 2025 Earnings and hosts a Q&A- A first quarter of profitability",
     "date": "2025-06-03",
