@@ -18,8 +18,8 @@
       "default": "https://i.ytimg.com/vi/c7gcF-a3QRU/default.jpg",
       "medium": "https://i.ytimg.com/vi/c7gcF-a3QRU/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/c7gcF-a3QRU/hqdefault.jpg",
-      "standard": "",
-      "maxres": ""
+      "standard": "https://i.ytimg.com/vi/c7gcF-a3QRU/sddefault.jpg",
+      "maxres": "https://i.ytimg.com/vi/c7gcF-a3QRU/maxresdefault.jpg"
     }
   },
   {
@@ -36,13 +36,13 @@
     ],
     "duration": "1h 4m 13s",
     "duration_iso": "PT1H4M13S",
-    "description": "To be informed of all GOLDEN PROSPECT PRECIOUS METALS LIMITED's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/golden-prospect-precious-metals-limited/register-investor",
+    "description": "To be informed of all GOLDEN PROSPECT PRECIOUS METALS LIMITED's upcoming presentations, register at InvestorMeetCompany: https://www.investormeetcompany.com/golden-prospect-precious-metals-limited/register-investor\n\n0:00 Introduction\n1:23 Overview\n8:56 Market\n29:00 Outlook\n32:31 Q&A",
     "thumbnails": {
       "default": "https://i.ytimg.com/vi/mLa8a_QEQgE/default.jpg",
       "medium": "https://i.ytimg.com/vi/mLa8a_QEQgE/mqdefault.jpg",
       "high": "https://i.ytimg.com/vi/mLa8a_QEQgE/hqdefault.jpg",
       "standard": "https://i.ytimg.com/vi/mLa8a_QEQgE/sddefault.jpg",
-      "maxres": "https://i.ytimg.com/vi/mLa8a_QEQgE/maxresdefault.jpg"
+      "maxres": ""
     }
   },
   {
