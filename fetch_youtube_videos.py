@@ -5,9 +5,40 @@ from datetime import datetime
 import argparse
 import re
 from dotenv import load_dotenv
+from db_operations import upsert_channel, insert_new_media_items, get_latest_media_item_date
 
 # Load environment variables from .env file
 load_dotenv()
+
+# --- Better Stack (Logtail) logging setup ---
+BETTERSTACK_TOKEN = os.getenv('BETTERSTACK_SOURCE_TOKEN')
+BETTERSTACK_HOST = os.getenv('BETTERSTACK_INGEST_HOST')
+BETTERSTACK_SOURCE_ID = os.getenv('BETTERSTACK_SOURCE_ID')
+
+if not (BETTERSTACK_TOKEN and BETTERSTACK_HOST and BETTERSTACK_SOURCE_ID):
+    print("WARNING: One or more Better Stack env vars are not set. Logging to Better Stack will not work.")
+    BETTERSTACK_LOGGING_ENABLED = False
+else:
+    BETTERSTACK_LOGGING_ENABLED = True
+    BETTERSTACK_URL = f"https://{BETTERSTACK_HOST}/{BETTERSTACK_SOURCE_ID}"
+
+def log_to_betterstack(level, message, context=None):
+    if not BETTERSTACK_LOGGING_ENABLED:
+        return
+    log_message = {
+        'dt': None,  # Let Logtail set the timestamp
+        'level': level,
+        'message': message,
+        'context': context or {}
+    }
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {BETTERSTACK_TOKEN}'
+    }
+    try:
+        requests.post(BETTERSTACK_URL, headers=headers, data=json.dumps(log_message), timeout=3)
+    except Exception as e:
+        print(f"Failed to send log to Better Stack: {e}")
 
 # YouTube API key should be stored as an environment variable
 API_KEY = os.environ.get('YOUTUBE_API_KEY')
@@ -230,7 +261,6 @@ def get_channel_videos(channel_id):
             
             # Convert published_at to YYYY-MM-DD format
             date = datetime.fromisoformat(published_at.replace('Z', '+00:00')).strftime('%Y-%m-%d')
-            print(f"Processing video {video_id} with date {date}")
             
             videos.append({
                 "id": video_id,
@@ -256,228 +286,95 @@ def get_channel_videos(channel_id):
     
     return videos
 
-def update_channel_json(channel, videos):
-    """Update the JSON file for a channel with new videos."""
-    # Ensure data directory exists
-    os.makedirs('data', exist_ok=True)
-    
-    json_path = f"data/{channel['slug']}.json"
-    existing_videos_from_file = []
-    
-    print("\n==================================================")
-    print(f"Processing {channel['name']}:")
-    print(f"Found {len(videos)} videos from YouTube API (after filtering shorts)")
-    
-    # Load existing videos if the file exists
-    if os.path.exists(json_path):
-        try:
-            with open(json_path, 'r') as f:
-                existing_videos_from_file = json.load(f)
-            
-            videos_to_keep = []
-            removed_short_video_ids = []
-            print(f"Checking {len(existing_videos_from_file)} existing videos in {json_path} for shorts...")
-
-            for idx, ex_video in enumerate(existing_videos_from_file):
-                is_short = False
-                video_id_for_log = ex_video.get('id', f"entry_{idx}")
-                duration_iso_str = ex_video.get('duration_iso')
-                
-                if duration_iso_str:
-                    seconds = parse_duration_to_seconds(duration_iso_str)
-                    if 0 < seconds < 120:
-                        is_short = True
-                elif 'duration' in ex_video: # Legacy entry, try parsing human-readable duration
-                    seconds = parse_human_readable_duration_to_seconds(ex_video['duration'])
-                    if 0 < seconds < 120:
-                        is_short = True
-                
-                if is_short:
-                    removed_short_video_ids.append(video_id_for_log)
-                else:
-                    videos_to_keep.append(ex_video)
-            
-            if removed_short_video_ids:
-                print(f"Removed {len(removed_short_video_ids)} existing short videos: {', '.join(removed_short_video_ids)}")
-            
-            existing_videos = videos_to_keep # This list is now filtered
-
-            print(f"Found {len(existing_videos)} existing videos in {json_path} (after filtering shorts)")
-            if existing_videos:
-                existing_videos.sort(key=lambda x: x.get('date', ''), reverse=True)
-                print(f"Most recent video date: {existing_videos[0]['date']}")
-                print(f"Oldest video date: {existing_videos[-1]['date']}")
-        except json.JSONDecodeError:
-            print(f"Error reading {json_path}, will create new file.")
-            existing_videos = [] # Ensure it's an empty list
-            print("Most recent video date: None")
-            print("Oldest video date: None")
-    else:
-        print(f"No existing video file found at {json_path}. Will create a new one.")
-        existing_videos = [] # <--- ADD THIS LINE
-        print("Most recent video date: None")
-        print("Oldest video date: None")
-    
-    # Create a dictionary of existing videos by ID for quick lookup
-    existing_video_ids = {video.get('id'): video for video in existing_videos}
-    
-    # Update existing videos and add new ones
-    updated = False
-    new_videos = []
-    updated_videos = []
-    
-    for video in videos:
-        video_id = video.get('id')
-        if video_id in existing_video_ids:
-            # Check if we need to update any fields
-            existing_video = existing_video_ids[video_id]
-            
-            # Preserve Apple Podcasts link if it exists
-            apple_podcast_link = next((link for link in existing_video.get('links', []) 
-                                     if link.get('platform') == 'Apple Podcasts'), None)
-            if apple_podcast_link:
-                video_links = video.get('links', [])
-                if not any(link.get('platform') == 'Apple Podcasts' for link in video_links):
-                    video_links.append(apple_podcast_link)
-                    video['links'] = video_links
-            
-            # Check if thumbnails need to be added or updated
-            if 'thumbnails' not in existing_video or existing_video['thumbnails'] != video['thumbnails']:
-                print(f"Updating thumbnails for video {video_id}")
-                existing_video_ids[video_id] = video
-                updated = True
-                updated_videos.append(video_id)
-            # Check if any other fields need updating
-            elif any(existing_video.get(key) != video.get(key) for key in ['title', 'description', 'duration']):
-                print(f"Updating fields for video {video_id}")
-                existing_video_ids[video_id] = video
-                updated = True
-                updated_videos.append(video_id)
-        else:
-            # This is a new video
-            print(f"Adding new video {video_id}")
-            print(f"Title: {video.get('title')}")
-            print(f"Date: {video.get('date')}")
-            existing_videos.append(video)
-            updated = True
-            new_videos.append(video_id)
-    
-    if new_videos:
-        print(f"\nFound {len(new_videos)} new videos:")
-        for vid_id in new_videos:
-            print(f"- {vid_id}")
-        print() # Add a blank line for spacing
-
-    if updated_videos:
-        print(f"\nUpdated details for {len(updated_videos)} existing videos: {', '.join(updated_videos)}")
-        print()
-    
-    # Rebuild the list from the updated dictionary if new videos were added or existing ones updated
-    if updated:
-        # Consolidate new videos with potentially updated existing ones
-        # New videos were appended to existing_videos list directly if they were truly new.
-        # Updated videos replaced entries in existing_video_ids.
-        
-        # Rebuild the list correctly to include new and updated videos
-        current_video_list = []
-        processed_ids_for_rebuild = set()
-
-        # Add all videos from the updated existing_video_ids dictionary
-        for vid_id, video_data in existing_video_ids.items():
-            current_video_list.append(video_data)
-            processed_ids_for_rebuild.add(vid_id)
-
-        # Add any genuinely new videos that were appended to existing_videos list
-        # but not part of the original existing_video_ids keys
-        for video_data in existing_videos:
-            if video_data.get('id') not in processed_ids_for_rebuild:
-                current_video_list.append(video_data)
-                processed_ids_for_rebuild.add(video_data.get('id'))
-
-        # Sort videos by date (newest first)
-        current_video_list.sort(key=lambda x: x.get('date', ''), reverse=True)
-        
-        # Save the updated list
-        with open(json_path, 'w') as f:
-            json.dump(current_video_list, f, indent=2)
-        print(f"Updated {json_path} with new videos or information")
-        print(f"Total videos after update: {len(current_video_list)}")
-    else:
-        print(f"No updates needed for {json_path}")
-    print("==================================================")
-
 def main():
-    # --- BEGIN ADDED CODE for channel-list.json ---
-    data_dir = "data"
-    channel_list_filename = "channel-list.json"
-    channel_list_path = os.path.join(data_dir, channel_list_filename)
-    known_config_file = "channels-config.json" # The primary config file this script uses
-
-    # Ensure data directory exists
-    if not os.path.exists(data_dir):
-        os.makedirs(data_dir)
-        print(f"Created directory: {data_dir}")
-
-    current_files_in_list = []
-    try:
-        if os.path.exists(channel_list_path):
-            with open(channel_list_path, 'r') as f:
-                content = f.read()
-                if content.strip(): # Check if file is not empty
-                    current_files_in_list = json.loads(content)
-                if not isinstance(current_files_in_list, list):
-                    print(f"Warning: {channel_list_path} does not contain a valid JSON list. It will be overwritten.")
-                    current_files_in_list = []
-        else:
-            print(f"{channel_list_path} not found, will be created.")
-    except json.JSONDecodeError:
-        print(f"Warning: Could not decode JSON from {channel_list_path}. It will be overwritten.")
-        current_files_in_list = []
-    except Exception as e:
-        print(f"An error occurred while reading {channel_list_path}: {e}. It will be treated as empty/overwritten.")
-        current_files_in_list = []
-
-    # Ensure the known_config_file is in the list
-    if known_config_file not in current_files_in_list:
-        current_files_in_list.append(known_config_file)
-        # Optionally, sort or remove duplicates if necessary, for now just append
-        # To keep it simple, we assume this is the only file actively managed this way by this script for now.
-    
-    try:
-        with open(channel_list_path, 'w') as f:
-            json.dump(current_files_in_list, f, indent=2)
-        print(f"Updated {channel_list_path} to ensure '{known_config_file}' is listed.")
-    except Exception as e:
-        print(f"Error writing to {channel_list_path}: {e}")
-    # --- END ADDED CODE ---
-
-    parser = argparse.ArgumentParser(description='Fetch YouTube videos and save to JSON')
+    parser = argparse.ArgumentParser(description='Fetch YouTube videos from configured channels')
     parser.add_argument('--config', default='channels-config.json', help='Path to channel configuration file')
-    parser.add_argument('--channel', help='Process only this channel slug')
     args = parser.parse_args()
     
-    if not API_KEY:
-        print("Error: YOUTUBE_API_KEY environment variable not set")
-        return
-    
+    # Load channel configuration
     channels = load_config(args.config)
     
     for channel in channels:
-        if args.channel and args.channel != channel['slug']:
-            continue
-
-        print(f"Processing channel: {channel['name']}")
+        print(f"\nProcessing channel: {channel['name']}")
         
-        # Script now assumes youtubeId is present in the config.
-        # If not, get_channel_videos will likely fail when it tries to use a None or missing ID.
-        # A more robust solution would be to call get_channel_id if youtubeId is missing,
-        # but that's outside the scope of this cleanup.
-        if not channel.get('youtubeId'):
-            print(f"youtubeId missing for {channel['name']}. Skipping channel. Please ensure config has youtubeId.")
+        # Get channel ID if not provided
+        channel_id = channel.get('youtubeId')
+        if not channel_id and channel.get('youtubeUsername'):
+            channel_id = get_channel_id(channel['youtubeUsername'])
+            if not channel_id:
+                print(f"Could not find channel ID for {channel['name']}")
+                log_to_betterstack('error', f"Could not find channel ID for {channel['name']}")
+                continue
+
+        # Get the latest date for this channel from the DB
+        latest_date = get_latest_media_item_date(channel['slug'])
+        if latest_date:
+            print(f"Latest date in DB for {channel['slug']}: {latest_date}")
+        else:
+            print(f"No existing media_items for {channel['slug']} in DB.")
+        
+        # Fetch all videos from YouTube
+        videos = get_channel_videos(channel_id)
+        if not videos:
+            print(f"No videos found for channel {channel['name']}")
+            log_to_betterstack('info', f"No videos found for channel {channel['name']}")
             continue
+        print(f"Found {len(videos)} videos for {channel['name']}")
+        
+        # Filter videos to only those with date >= latest_date (if any)
+        if latest_date:
+            videos_to_process = [v for v in videos if v['date'] >= latest_date]
+        else:
+            videos_to_process = videos
+        print(f"Processing {len(videos_to_process)} new or potentially missing videos for {channel['name']}")
 
-        videos = get_channel_videos(channel['youtubeId'])
-        update_channel_json(channel, videos)
+        # Print only the videos that will actually be processed
+        for video in videos_to_process:
+            print(f"Processing video {video['id']} with date {video['date']}")
+        
+        # Upsert channel to database
+        upsert_channel(channel)
+        
+        # Insert only new media items to database, with logging for each video
+        from supabase_config import get_supabase_client
+        supabase = get_supabase_client()
+        existing = supabase.table('media_items').select('id').eq('channel_slug', channel['slug']).execute()
+        existing_ids = {item['id'] for item in (existing.data or [])}
+        new_count = 0
+        for video in videos_to_process:
+            if video['id'] in existing_ids:
+                continue
+            try:
+                record = {
+                    'id': video['id'],
+                    'title': video['title'],
+                    'date': video['date'],
+                    'content_type': video.get('contentType', 'podcast'),
+                    'duration': video.get('duration'),
+                    'description': video.get('description'),
+                    'youtube_id': video['id'],
+                    'image': video.get('thumbnails', {}).get('high') or video.get('thumbnails', {}).get('default'),
+                    'channel_slug': channel['slug'],
+                    'youtube_url': f"https://www.youtube.com/watch?v={video['id']}"
+                }
+                supabase.table('media_items').insert(record).execute()
+                log_to_betterstack('info', f"Added video {video['id']} ({video['title']}) to channel {channel['slug']}")
+                new_count += 1
+            except Exception as e:
+                log_to_betterstack('error', f"Failed to add video {video['id']} ({video['title']}) to channel {channel['slug']}: {e}")
+        log_to_betterstack('info', f"Channel processed: {channel['name']} (slug: {channel['slug']}), new videos added: {new_count}")
+        print(f"Successfully processed {len(videos_to_process)} videos for {channel['name']} (new: {new_count})")
 
-if __name__ == "__main__":
-    main() 
+    # NOTE: This script is safe to re-run. It will only insert missing items, and always re-processes the most recent date to handle partial failures or backfilling.
+
+if __name__ == '__main__':
+    main()
+
+    # Standalone test for Logtail logging
+    BETTERSTACK_TOKEN = os.environ.get('BETTERSTACK_SOURCE_TOKEN')
+    print(f"Logtail token loaded: {BETTERSTACK_TOKEN}")
+    if BETTERSTACK_TOKEN:
+        log_to_betterstack('info', "Standalone Logtail test log: handler initialised and token loaded.")
+        print("Sent test log to Better Stack.")
+    else:
+        print("WARNING: BETTERSTACK_SOURCE_TOKEN is not set. Logging to Better Stack will not work.") 

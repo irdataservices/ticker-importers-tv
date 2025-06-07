@@ -26,11 +26,10 @@ jobs:
       - name: Fetch YouTube videos
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGEST_HOST: ${{ secrets.BETTERSTACK_INGEST_HOST }}
+          BETTERSTACK_SOURCE_ID: ${{ secrets.BETTERSTACK_SOURCE_ID }}
         run: python fetch_youtube_videos.py
-
-      - name: Commit and push if changes
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git add data/*.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update YouTube videos" && git push) 
