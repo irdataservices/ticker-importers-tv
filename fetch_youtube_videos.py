@@ -6,39 +6,23 @@ import argparse
 import re
 from dotenv import load_dotenv
 from db_operations import upsert_channel, insert_new_media_items, get_latest_media_item_date
+from logtail import LogtailHandler
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
 
-# --- Better Stack (Logtail) logging setup ---
-BETTERSTACK_TOKEN = os.getenv('BETTERSTACK_SOURCE_TOKEN')
-BETTERSTACK_HOST = os.getenv('BETTERSTACK_INGEST_HOST')
-BETTERSTACK_SOURCE_ID = os.getenv('BETTERSTACK_SOURCE_ID')
-
-if not (BETTERSTACK_TOKEN and BETTERSTACK_HOST and BETTERSTACK_SOURCE_ID):
-    print("WARNING: One or more Better Stack env vars are not set. Logging to Better Stack will not work.")
-    BETTERSTACK_LOGGING_ENABLED = False
+# Set up Better Stack (Logtail) logging
+logtail_token = os.environ.get('BETTERSTACK_SOURCE_TOKEN')
+print(f"Logtail token loaded: {logtail_token}")  # Debug print
+logger = logging.getLogger("betterstack")
+if logtail_token:
+    handler = LogtailHandler(source_token=logtail_token)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    logger.info("Test log from local run: Logtail handler initialised and token loaded.")
 else:
-    BETTERSTACK_LOGGING_ENABLED = True
-    BETTERSTACK_URL = f"https://{BETTERSTACK_HOST}/{BETTERSTACK_SOURCE_ID}"
-
-def log_to_betterstack(level, message, context=None):
-    if not BETTERSTACK_LOGGING_ENABLED:
-        return
-    log_message = {
-        'dt': None,  # Let Logtail set the timestamp
-        'level': level,
-        'message': message,
-        'context': context or {}
-    }
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {BETTERSTACK_TOKEN}'
-    }
-    try:
-        requests.post(BETTERSTACK_URL, headers=headers, data=json.dumps(log_message), timeout=3)
-    except Exception as e:
-        print(f"Failed to send log to Better Stack: {e}")
+    print("WARNING: BETTERSTACK_SOURCE_TOKEN is not set. Logging to Better Stack will not work.")
 
 # YouTube API key should be stored as an environment variable
 API_KEY = os.environ.get('YOUTUBE_API_KEY')
@@ -261,6 +245,7 @@ def get_channel_videos(channel_id):
             
             # Convert published_at to YYYY-MM-DD format
             date = datetime.fromisoformat(published_at.replace('Z', '+00:00')).strftime('%Y-%m-%d')
+            print(f"Processing video {video_id} with date {date}")
             
             videos.append({
                 "id": video_id,
@@ -303,7 +288,7 @@ def main():
             channel_id = get_channel_id(channel['youtubeUsername'])
             if not channel_id:
                 print(f"Could not find channel ID for {channel['name']}")
-                log_to_betterstack('error', f"Could not find channel ID for {channel['name']}")
+                logger.error(f"Could not find channel ID for {channel['name']}")
                 continue
 
         # Get the latest date for this channel from the DB
@@ -317,7 +302,7 @@ def main():
         videos = get_channel_videos(channel_id)
         if not videos:
             print(f"No videos found for channel {channel['name']}")
-            log_to_betterstack('info', f"No videos found for channel {channel['name']}")
+            logger.info(f"No videos found for channel {channel['name']}")
             continue
         print(f"Found {len(videos)} videos for {channel['name']}")
         
@@ -327,10 +312,6 @@ def main():
         else:
             videos_to_process = videos
         print(f"Processing {len(videos_to_process)} new or potentially missing videos for {channel['name']}")
-
-        # Print only the videos that will actually be processed
-        for video in videos_to_process:
-            print(f"Processing video {video['id']} with date {video['date']}")
         
         # Upsert channel to database
         upsert_channel(channel)
@@ -358,23 +339,14 @@ def main():
                     'youtube_url': f"https://www.youtube.com/watch?v={video['id']}"
                 }
                 supabase.table('media_items').insert(record).execute()
-                log_to_betterstack('info', f"Added video {video['id']} ({video['title']}) to channel {channel['slug']}")
+                logger.info(f"Added video {video['id']} ({video['title']}) to channel {channel['slug']}")
                 new_count += 1
             except Exception as e:
-                log_to_betterstack('error', f"Failed to add video {video['id']} ({video['title']}) to channel {channel['slug']}: {e}")
-        log_to_betterstack('info', f"Channel processed: {channel['name']} (slug: {channel['slug']}), new videos added: {new_count}")
+                logger.error(f"Failed to add video {video['id']} ({video['title']}) to channel {channel['slug']}: {e}")
+        logger.info(f"Channel processed: {channel['name']} (slug: {channel['slug']}), new videos added: {new_count}")
         print(f"Successfully processed {len(videos_to_process)} videos for {channel['name']} (new: {new_count})")
 
     # NOTE: This script is safe to re-run. It will only insert missing items, and always re-processes the most recent date to handle partial failures or backfilling.
 
 if __name__ == '__main__':
-    main()
-
-    # Standalone test for Logtail logging
-    BETTERSTACK_TOKEN = os.environ.get('BETTERSTACK_SOURCE_TOKEN')
-    print(f"Logtail token loaded: {BETTERSTACK_TOKEN}")
-    if BETTERSTACK_TOKEN:
-        log_to_betterstack('info', "Standalone Logtail test log: handler initialised and token loaded.")
-        print("Sent test log to Better Stack.")
-    else:
-        print("WARNING: BETTERSTACK_SOURCE_TOKEN is not set. Logging to Better Stack will not work.") 
+    main() 
