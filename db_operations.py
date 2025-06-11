@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-from supabase_config import get_supabase_client, CHANNELS_TABLE
+from supabase_config import get_supabase_client, CHANNELS_TABLE, VIDEOS_TABLE
 
 def upsert_channel(channel_data: Dict[str, Any]) -> None:
     """Upsert a channel record into the 'channels' table."""
@@ -17,7 +17,7 @@ def insert_new_media_items(channel_slug: str, videos: List[Dict[str, Any]]) -> N
     """Insert only new media_items for a channel, skipping existing ones (by id)."""
     supabase = get_supabase_client()
     # Get all existing ids for this channel
-    existing = supabase.table('media_items').select('id').eq('channel_slug', channel_slug).execute()
+    existing = supabase.table(VIDEOS_TABLE).select('id').eq('channel_slug', channel_slug).execute()
     existing_ids = {item['id'] for item in (existing.data or [])}
 
     new_records = []
@@ -41,12 +41,12 @@ def insert_new_media_items(channel_slug: str, videos: List[Dict[str, Any]]) -> N
         }
         new_records.append(record)
     if new_records:
-        supabase.table('media_items').insert(new_records).execute()
+        supabase.table(VIDEOS_TABLE).insert(new_records).execute()
 
 def get_channel_media_items(channel_slug: str) -> List[Dict[str, Any]]:
     """Get all media_items for a channel."""
     supabase = get_supabase_client()
-    response = supabase.table('media_items').select('*').eq('channel_slug', channel_slug).execute()
+    response = supabase.table(VIDEOS_TABLE).select('*').eq('channel_slug', channel_slug).execute()
     return response.data
 
 def get_all_channels() -> List[Dict[str, Any]]:
@@ -58,7 +58,7 @@ def get_all_channels() -> List[Dict[str, Any]]:
 def get_latest_media_item_date(channel_slug: str) -> Optional[str]:
     """Get the latest (most recent) date for a channel's media_items. Returns ISO date string or None."""
     supabase = get_supabase_client()
-    response = supabase.table('media_items')\
+    response = supabase.table(VIDEOS_TABLE)\
         .select('date')\
         .eq('channel_slug', channel_slug)\
         .order('date', desc=True)\

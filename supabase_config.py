@@ -16,5 +16,5 @@ def get_supabase_client() -> Client:
     return create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Table names
-VIDEOS_TABLE = 'videos'
-CHANNELS_TABLE = 'channels' 
+VIDEOS_TABLE = 'tv_media_items'
+CHANNELS_TABLE = 'tv_channels' 

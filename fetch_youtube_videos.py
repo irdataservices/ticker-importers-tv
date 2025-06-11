@@ -6,6 +6,7 @@ import argparse
 import re
 from dotenv import load_dotenv
 from db_operations import upsert_channel, insert_new_media_items, get_latest_media_item_date
+from supabase_config import get_supabase_client, CHANNELS_TABLE, VIDEOS_TABLE
 from logtail import LogtailHandler
 import logging
 
@@ -317,9 +318,8 @@ def main():
         upsert_channel(channel)
         
         # Insert only new media items to database, with logging for each video
-        from supabase_config import get_supabase_client
         supabase = get_supabase_client()
-        existing = supabase.table('media_items').select('id').eq('channel_slug', channel['slug']).execute()
+        existing = supabase.table(VIDEOS_TABLE).select('id').eq('channel_slug', channel['slug']).execute()
         existing_ids = {item['id'] for item in (existing.data or [])}
         new_count = 0
         for video in videos_to_process:
@@ -338,7 +338,7 @@ def main():
                     'channel_slug': channel['slug'],
                     'youtube_url': f"https://www.youtube.com/watch?v={video['id']}"
                 }
-                supabase.table('media_items').insert(record).execute()
+                supabase.table(VIDEOS_TABLE).insert(record).execute()
                 logger.info(f"Added video {video['id']} ({video['title']}) to channel {channel['slug']}")
                 new_count += 1
             except Exception as e:
